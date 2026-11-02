@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ course.name }}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">Online Course App</a>
+    </nav>
+
+    <div class="container mt-5">
+        <h2 class="font-weight-bold">{{ course.name }}</h2>
+        <p class="lead">{{ course.description }}</p>
+
+        <hr class="my-4">
+
+        <h3>Lessons</h3>
+        <div class="list-group">
+            {% for lesson in course.lesson_set.all %}
+                <div class="list-group-item list-group-item-action flex-column align-items-start mb-3">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{ lesson.title }}</h5>
+                    </div>
+                    <p class="mb-1">{{ lesson.content }}</p>
+                </div>
+            {% empty %}
+                <p>No lessons available for this course yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
