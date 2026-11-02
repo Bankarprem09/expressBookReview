@@ -1,8 +1,6 @@
 from django.db import models
 from django.conf import settings
-from django.utils.timezone import now
 
-# Course Model
 class Course(models.Model):
     name = models.CharField(max_length=100, default='online course')
     description = models.CharField(max_length=500)
@@ -11,13 +9,14 @@ class Course(models.Model):
     def __str__(self):
         return self.name
 
-# Lesson Model
 class Lesson(models.Model):
     title = models.CharField(max_length=200, default="title")
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     content = models.TextField()
 
-# Question Model
+    def __str__(self):
+        return self.title
+
 class Question(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     question_text = models.TextField()
@@ -33,7 +32,6 @@ class Question(models.Model):
             return True
         return False
 
-# Choice Model
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length=200)
@@ -42,7 +40,15 @@ class Choice(models.Model):
     def __str__(self):
         return self.choice_text
 
-# Submission Model
+class Enrollment(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    date_enrolled = models.DateField(auto_now_add=True)
+    mode = models.CharField(max_length=10, default='audit')
+
 class Submission(models.Model):
-    enrollment = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE) # or Enrollment model depending on structure
+    enrollment = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
     choices = models.ManyToManyField(Choice)
+
+    def __str__(self):
+        return f"Submission {self.id} for {self.enrollment}"
